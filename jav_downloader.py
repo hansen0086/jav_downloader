@@ -3,10 +3,13 @@ import re
 import os
 from bs4 import BeautifulSoup
 
-key_word = "深田" # the searching keyword
+key_word = "天海翼" # the searching keyword
 resolution = "480p"# can choose 480p or 720p
 new_folder_name = key_word
-os.mkdir(new_folder_name)
+try:
+    os.mkdir(new_folder_name)
+except:
+    print("folder already exists")
 
 
 
@@ -54,23 +57,16 @@ for instance in row2.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
     row2 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
     mp4url= row2.find('div',class_='col-md-8').find('div').find('div',class_='video-container').find('video').find('source',label=resolution)['src']
     #print(mp4url)
-    file_name = href.split('/')[3]
+    file_name = href.split('/')[3]+".mp4"
     print("Downloading:")
     print(file_name)
-    r = requests.get(mp4url,timeout=1000)
+    r = requests.get(mp4url)
 
     with open (new_folder_name+"/"+file_name,'wb') as fd:
         fd.write(r.content)
 
     #now use the mp4url to download the mp4 file
 
-
-
-
-
-    
-
-    
 print("%d videos downloaded" %(video_counter))
 
 
