@@ -65,7 +65,7 @@ for instance in row2.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
 
 print("%d videos in total"%(video_counter))
 
-
+total = video_counter
 video_counter =0
 #for each video page in this search result page
 for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
@@ -87,12 +87,15 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
         mp4url= row3.find('source')['src']
     #print(mp4url)
     file_name = href.split('/')[3]+".mp4"
-    print("Downloading:")
+    print("Downloading(%d/%d):"%(video_counter, total))
     print("%s from %s"% (file_name,mp4url))
     
     r = requests.get(mp4url)
     with open (new_folder_name+"/"+file_name,'wb') as fd:
-        fd.write(r.content)
+        for chunk in r.iter_content(chunk_size=1024):
+            if chunk:
+                fd.write(chunk)
+
 
     
 
