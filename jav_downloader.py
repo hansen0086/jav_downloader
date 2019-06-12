@@ -87,6 +87,11 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
         mp4url= row3.find('source')['src']
     #print(mp4url)
     file_name = href.split('/')[3]+".mp4"
+
+    if(os.path.exists(new_folder_name+"/"+file_name)):
+        print("%s already exists, skipped"%(file_name))
+        continue
+
     print("Downloading(%d/%d):"%(video_counter, total))
     print("%s from %s"% (file_name,mp4url))
     
