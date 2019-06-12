@@ -4,16 +4,13 @@ import os
 import sys
 from bs4 import BeautifulSoup
 
-try:
-    key_word = sys.argv[1]
-except:
-    key_word = "深田" # the searching keyword
-resolution = "480p"# can choose 480p or 720p
-if (len(sys.argv)>=3):
-    if (sys.argv[2]=="480" or sys.argv[2]=="480p"):
-        resolution="480p"
-    elif (sys.argv[2]=="720" or sys.argv[2]=="720p"):
-        resolution="720p"
+
+key_word=""
+resolution=""
+while(key_word==""):
+    key_word = input('please enter keyword\n')
+while(resolution !="480" and resolution != "720"):
+    resolution = input('please enter resolution(enter 480 or 720)\n') 
 
 new_folder_name = key_word
 
