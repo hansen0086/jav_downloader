@@ -36,9 +36,6 @@ def getHTMLText(url):
 
 base_url = "http://avjoy.me/search/videos?search_query="+key_word
 
-#mp4_url = "http://avjoy.me:2087/video/Js29eUN1b2yt3YwGrrHxQw/1560169188/1871_480p.mp4"
-
-
 text = getHTMLText(base_url)
 soup = BeautifulSoup(text,'lxml')
 
@@ -60,7 +57,11 @@ for instance in row2.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
 
     text = getHTMLText(videopageurl)
     soup = BeautifulSoup(text,'lxml')
-    row2 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    try:
+        row2 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    except:
+        print("cant access this video, it might be a private file")
+        continue
     #print(row2.find('div',class_='col-md-8').find('div').find('div',class_='video-container'))
     try:
         #new version has property where label="480p" and type="video/mp4"
@@ -79,15 +80,18 @@ video_counter =0
 #for each video page in this search result page
 for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
     #print("in for loop")
-
     video_counter+=1
     href = instance.find('div',class_='well well-sm').a['href']#video name
     videopageurl = "http://avjoy.me"+href #the url of the video page
-
     #print(videopageurl)
     text = getHTMLText(videopageurl)
     soup = BeautifulSoup(text,'lxml')
-    row3 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    try:
+        row3 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    except:
+        print("cant access this video, it might be a private file")
+        continue
+        
     #print(row3.find('div',class_='col-md-8').find('div').find('div',class_='video-container'))
     try:
         #new version has property where label="480p" and type="video/mp4"
@@ -109,9 +113,5 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
                 fd.write(chunk)
-
-
-    
-
 print("%d videos downloaded" %(video_counter))
 
