@@ -2,12 +2,14 @@ import requests
 import re
 import os
 import sys
+import math
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 
 try:
     key_word = sys.argv[1]
 except:
-    key_word = "桃谷" # the searching keyword
+    key_word = "国产" # the searching keyword
 resolution = "480p"# can choose 480p or 720p
 if (len(sys.argv)>=3):
     if (sys.argv[2]=="480" or sys.argv[2]=="480p"):
@@ -109,8 +111,10 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
     print("%s from %s"% (file_name,mp4url))
     
     r = requests.get(mp4url,stream = True)
+    file_size = int(r.headers.get('content-length', 0))
+    block_size = 1024
     with open (new_folder_name+"/"+file_name,'wb') as fd:
-        for chunk in r.iter_content(chunk_size=1024):
+        for chunk in tqdm(r.iter_content(chunk_size=block_size),total=math.ceil(file_size//block_size) , unit='KB', unit_scale=True):
             if chunk:
                 fd.write(chunk)
 print("%d videos downloaded" %(video_counter))
