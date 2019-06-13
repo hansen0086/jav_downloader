@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 try:
     key_word = sys.argv[1]
 except:
-    key_word = "深田" # the searching keyword
+    key_word = "桃谷" # the searching keyword
 resolution = "480p"# can choose 480p or 720p
 if (len(sys.argv)>=3):
     if (sys.argv[2]=="480" or sys.argv[2]=="480p"):
@@ -41,7 +41,6 @@ base_url = "http://avjoy.me/search/videos?search_query="+key_word
 
 text = getHTMLText(base_url)
 soup = BeautifulSoup(text,'lxml')
-
 
 wrapper = soup.find('div',id = 'wrapper')
 container = wrapper.find('div',class_='container')
@@ -105,7 +104,7 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
     print("Downloading(%d/%d):"%(video_counter, total))
     print("%s from %s"% (file_name,mp4url))
     
-    r = requests.get(mp4url)
+    r = requests.get(mp4url,stream = True)
     with open (new_folder_name+"/"+file_name,'wb') as fd:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
