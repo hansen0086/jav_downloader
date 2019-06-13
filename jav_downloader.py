@@ -9,8 +9,8 @@ key_word=""
 resolution=""
 while(key_word==""):
     key_word = input('please enter keyword\n')
-while(resolution !="480" and resolution != "720"):
-    resolution = input('please enter resolution(enter 480 or 720)\n') 
+while(resolution !="480p" and resolution != "720p"):
+    resolution = input('please enter resolution(enter 480p or 720p)\n') 
 
 new_folder_name = key_word
 
@@ -58,7 +58,11 @@ for instance in row2.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
 
     text = getHTMLText(videopageurl)
     soup = BeautifulSoup(text,'lxml')
-    row2 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    try:
+        row2 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    except:
+        print("cant access this video, it might be a private file")
+        continue
     #print(row2.find('div',class_='col-md-8').find('div').find('div',class_='video-container'))
     try:
         #new version has property where label="480p" and type="video/mp4"
@@ -85,13 +89,17 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
     #print(videopageurl)
     text = getHTMLText(videopageurl)
     soup = BeautifulSoup(text,'lxml')
-    row3 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    try:
+        row3 = soup.find('div',id='wrapper').find('div',class_='container').find_all('div',class_='row')[1]
+    except:
+        print("cant access this video, it might be a private file")
+        continue
     #print(row3.find('div',class_='col-md-8').find('div').find('div',class_='video-container'))
     try:
         #new version has property where label="480p" and type="video/mp4"
         mp4url= row3.find('div',class_='col-md-8').find('div').find('div',class_='video-container').find('video').find('source',label=resolution)['src']
     except:
-        mp4url= row3.find('source')['src']
+        continue
     #print(mp4url)
     file_name = href.split('/')[3]+".mp4"
 
@@ -102,7 +110,7 @@ for instance in row3.find_all('div',class_='col-sm-6 col-md-4 col-lg-4'):
     print("Downloading(%d/%d):"%(video_counter, total))
     print("%s from %s"% (file_name,mp4url))
     
-    r = requests.get(mp4url)
+    r = requests.get(mp4url,stream=True)
     with open (new_folder_name+"/"+file_name,'wb') as fd:
         for chunk in r.iter_content(chunk_size=1024):
             if chunk:
